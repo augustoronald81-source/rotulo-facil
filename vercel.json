@@ -1,0 +1,10 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    { "source": "/api/analisar-rotulo", "destination": "/api/analisar-rotulo.js" },
+    { "source": "/api/analyze-label", "destination": "/api/analisar-rotulo.js" },
+    { "source": "/api/analyze-ingredients", "destination": "/api/analyze-ingredients.js" },
+    { "source": "/api/health", "destination": "/api/health.js" },
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
+  ]
+}
