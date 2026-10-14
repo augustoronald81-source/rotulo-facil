@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import type { ProductData } from '../types/nutrition';
 import { ImageModal } from './ImageModal';
 import { interpretSingleProduct } from '../utils/singleProductInterpretation';
+import { AccessibilityControls } from './AccessibilityControls';
+import { buildSingleProductAudioText } from '../utils/accessibilityText';
 import { 
   Package, 
   ExternalLink, 
@@ -37,6 +39,7 @@ export const ProductResult: React.FC<ProductResultProps> = ({
 
   const { nutriments, alerts } = product;
   const interpretation = interpretSingleProduct(product);
+  const audioInterpretationText = buildSingleProductAudioText(product.productName, interpretation);
 
   // Helper to format values or return "Não informado"
   const renderNutrient = (
@@ -411,6 +414,13 @@ export const ProductResult: React.FC<ProductResultProps> = ({
             Entenda o que os dados declarados revelam sobre a composição deste alimento, com base nos parâmetros da Anvisa.
           </p>
         </div>
+
+        {/* Bloco de Acessibilidade: Ouvir análise & VLibras */}
+        <AccessibilityControls 
+          key={product.code}
+          text={audioInterpretationText}
+          sectionTitle="Interpretação do Perfil Nutricional"
+        />
 
         {!interpretation.hasSufficientData ? (
           <div className="card interpretation-fallback-card">

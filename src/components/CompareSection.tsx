@@ -4,6 +4,8 @@ import { DEMO_PRODUCTS } from '../data/demoProducts';
 import { ImageModal } from './ImageModal';
 import { NutritionTablePhotoScanner } from './NutritionTablePhotoScanner';
 import { analyzeProductComparison } from '../utils/comparisonEngine';
+import { AccessibilityControls } from './AccessibilityControls';
+import { buildComparisonAudioText } from '../utils/accessibilityText';
 import { 
   Columns3, 
   Sparkles, 
@@ -55,6 +57,9 @@ export const CompareSection: React.FC<CompareSectionProps> = ({
   const isBothPresent = productA !== null && productB !== null;
   const analysis = isBothPresent && productA && productB ? analyzeProductComparison(productA, productB) : null;
   const baseLabel = isBothPresent && productA ? (productA.isLiquid ? '100 mL' : '100 g') : '100 g / 100 mL';
+  const comparisonAudioText = isBothPresent && productA && productB && analysis
+    ? buildComparisonAudioText(productA, productB, analysis)
+    : '';
 
   // Helper for side-by-side table rows
   const renderCompareRow = (
@@ -397,7 +402,7 @@ export const CompareSection: React.FC<CompareSectionProps> = ({
                 <div className="card bg-emerald-50" style={{ borderLeft: '4px solid #10b981', padding: '1.25rem', marginBottom: '1.5rem' }}>
                   <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
                     <Scale size={24} className="icon-emerald" style={{ flexShrink: 0, marginTop: '2px' }} />
-                    <div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
                       <strong style={{ fontSize: '1rem', color: '#065f46' }}>Conclusão do Perfil Nutricional:</strong>
                       <p style={{ fontSize: '0.925rem', color: '#047857', margin: '0.35rem 0 0 0', lineHeight: 1.5 }}>
                         {analysis.conclusion}
@@ -405,6 +410,13 @@ export const CompareSection: React.FC<CompareSectionProps> = ({
                       <div style={{ marginTop: '0.5rem', fontSize: '0.785rem', color: '#065f46' }}>
                         <strong>Critérios Avaliados:</strong> {analysis.criteriaUsed.join(', ') || 'Composição Nutricional Geral'}
                       </div>
+
+                      {/* Bloco de Acessibilidade: Ouvir análise & VLibras */}
+                      <AccessibilityControls 
+                        key={`${productA.code}-${productB.code}`}
+                        text={comparisonAudioText}
+                        sectionTitle="Conclusão do Perfil Nutricional"
+                      />
                     </div>
                   </div>
                 </div>

@@ -13,6 +13,33 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   </head>
   <body>
+    <!-- VLibras Widget Oficial de Acessibilidade -->
+    <div vw class="enabled">
+      <div vw-access-button class="active"></div>
+      <div vw-plugin-wrapper>
+        <div class="vw-plugin-top-wrapper"></div>
+      </div>
+    </div>
+    <script src="https://vlibras.gov.br/app/vlibras-plugin.js" async></script>
+    <script>
+      (function() {
+        function initVLibras() {
+          try {
+            if (window.VLibras && window.VLibras.Widget && !window.__vlibrasWidgetInstance) {
+              window.__vlibrasWidgetInstance = new window.VLibras.Widget('https://vlibras.gov.br/app');
+            }
+          } catch (e) {
+            console.warn('VLibras não inicializado:', e);
+          }
+        }
+        window.addEventListener('load', initVLibras);
+        var script = document.querySelector('script[src*="vlibras-plugin.js"]');
+        if (script) {
+          script.addEventListener('load', initVLibras);
+        }
+      })();
+    </script>
+
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

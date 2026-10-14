@@ -30,9 +30,20 @@ export function App() {
 
   const [isDemoSelectorOpen, setIsDemoSelectorOpen] = useState(false);
 
+  const cancelAudio = () => {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      try {
+        window.speechSynthesis.cancel();
+      } catch {
+        // Ignora
+      }
+    }
+  };
+
   // Listen to browser Back / Forward buttons (popstate)
   useEffect(() => {
     const handlePopState = () => {
+      cancelAudio();
       const route = getRouteFromPath(window.location.pathname);
       setCurrentPath(route);
       window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
@@ -43,6 +54,7 @@ export function App() {
   }, []);
 
   const navigate = (path: string) => {
+    cancelAudio();
     const route = getRouteFromPath(path);
     if (window.location.pathname !== route) {
       window.history.pushState({}, '', route);
@@ -52,6 +64,7 @@ export function App() {
   };
 
   const handleOpenDemo = (demoIndex: number = 0) => {
+    cancelAudio();
     const demo = DEMO_PRODUCTS[demoIndex] || DEMO_PRODUCTS[0];
     setSelectedProduct(demo);
     navigate('/entender-rotulo');
@@ -59,6 +72,7 @@ export function App() {
   };
 
   const handleAddToCompare = (product: ProductData) => {
+    cancelAudio();
     if (!productA) {
       setProductA(product);
     } else if (!productB && productA.code !== product.code) {
@@ -70,11 +84,13 @@ export function App() {
   };
 
   const handleOpenSearchForSlot = (slot: 'A' | 'B') => {
+    cancelAudio();
     setTargetSlot(slot);
     navigate('/entender-rotulo');
   };
 
   const handleSelectProductFromSearch = (product: ProductData | null) => {
+    cancelAudio();
     setSelectedProduct(product);
     if (product && targetSlot) {
       if (targetSlot === 'A') setProductA(product);
